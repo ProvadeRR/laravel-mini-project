@@ -52,6 +52,9 @@
                                 </li>
                             @endif
                         @else
+                            @role('admin')
+{{--                            <a class="nav-link" href="{{ route('admin.dashboard') }}">Административная панель</a>--}}
+                            @endrole
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

@@ -177,6 +177,10 @@ return [
 
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
 
+
+        Spatie\Permission\PermissionServiceProvider::class,
+
+
     ],
 
     /*
