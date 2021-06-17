@@ -39,12 +39,6 @@
                 <div class="form-group mt-3 filter-form" >
                     <label for="" >Категория</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="news_all" checked>
-                        <label class="form-check-label" for="news_all">
-                            Показывать все
-                        </label>
-                    </div>
-                    <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="news_sport">
                         <label class="form-check-label" for="news_sport">
                             Новости спорта

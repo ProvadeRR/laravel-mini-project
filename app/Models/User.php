@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Class User
+ * @package App\Models
+ * @param string $name;
+ * @param string $email;
+ * @param string $password;
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, hasRoles;
@@ -19,9 +25,27 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
     ];
+
+    /**
+     * @var array
+     */
+    protected $dates = [
+        self::CREATED_AT,
+        self::UPDATED_AT,
+    ];
+
+
+    /**
+     * @var string[]
+     */
+    protected $appends = [
+        'full_name'
+    ];
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -34,17 +58,20 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
+     * @return bool
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public function isAdmin(){
+    public function isAdmin():bool
+    {
         return $this->getRoleNames()->contains('admin');
     }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute(){
+        return $this->name . ' ' . $this->surname;
+    }
+
 
 
 }

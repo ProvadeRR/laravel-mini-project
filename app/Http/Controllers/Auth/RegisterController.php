@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\RegisteredUser;
 use App\Http\Controllers\Controller;
+use App\Jobs\UserRegistered;
+use App\Jobs\UserRegisteredSendAdminsJob;
+use App\Notifications\UserRegisteredAdminNotification;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -50,7 +56,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255' , 'regex: /^[a-zA-Zа-яА-Я]/i'],
+            'surname' => ['required', 'string', 'max:255' , 'regex: /^[a-zA-Zа-яА-Я]/i'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'g-recaptcha-response' => ['required', 'captcha'],
@@ -68,11 +75,13 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'surname' => $data['surname'],
             'password' => Hash::make($data['password']),
         ]);
 
         $user->assignRole('user');
 
+        event(new RegisteredUser($user));
         return $user;
     }
 }

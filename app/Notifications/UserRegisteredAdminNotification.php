@@ -2,30 +2,27 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Notifications\Notification;
 
 class UserRegisteredAdminNotification extends Notification
 {
-    use Queueable;
+    private $user;
 
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param User $user
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
+     * @param $notifiable
+     * @return string[]
      */
     public function via($notifiable)
     {
@@ -33,29 +30,19 @@ class UserRegisteredAdminNotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
+     * @param $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
+
         return [
-            //
+            'id' => $this->user->id,
+            'name_surname' => $this->user->full_name,
+            'email' => $this->user->email,
+            'time' => Carbon::parse($this->user->created_at)->format('d.m.Y H:i'),
+            'message' => 'Пользователь успешно зарегистрировался в системе',
+
         ];
     }
 }
